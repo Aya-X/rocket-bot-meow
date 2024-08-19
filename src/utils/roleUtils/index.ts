@@ -1,7 +1,7 @@
 import { Message, Role } from 'discord.js';
 
-function hasMatchingKeywords(roleKeywords: Set<string>, messageWords: Set<string>): boolean {
-  return Array.from(roleKeywords).some(keyword => messageWords.has(keyword));
+function hasMatchingKeywords(roleKeywords: string[], messageContent: string): boolean {
+  return Array.from(roleKeywords).some(keyword => messageContent.includes(keyword));
 }
 // end of hasMatchingKeywords
 
@@ -22,12 +22,9 @@ export function findAndAssignRole(
   roleMap: Record<string, string[]>,
 ): string | null {
   const messageContent = message.content.toLowerCase().replace(/\s+/g, '');
-  const roleMapSet = new Map(
-    Object.entries(roleMap).map(([roleName, keywords]) => [new Set(keywords), roleName])
-  );
 
-  const matchedEntry = Array.from(roleMapSet.entries()).find(([keywords]) => {
-    return hasMatchingKeywords(keywords, new Set([messageContent]));
+  const matchedEntry = Object.entries(roleMap).find(([roleName, keywords]) => {
+    return hasMatchingKeywords(keywords, messageContent);
   });
 
   if (!matchedEntry) {
@@ -35,7 +32,7 @@ export function findAndAssignRole(
     return null;
   }
 
-  const [_, roleName] = matchedEntry;
+  const [roleName] = matchedEntry;
   const role = findRole(message, roleName);
 
   if (!role) {
