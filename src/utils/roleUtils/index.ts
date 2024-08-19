@@ -19,25 +19,29 @@ async function assignRole(message: Message, role: Role) {
 
 export function findAndAssignRole(
   message: Message,
-  roleMap: Record<string, string>
+  roleMap: Record<string, string[]>,
 ): string | null {
-  const messageWords = new Set(message.content.toLowerCase().split(/\s+/));
+  const messageContent = message.content.toLowerCase().replace(/\s+/g, '');
   const roleMapSet = new Map(
-    Object.entries(roleMap).map(([key, value]) => [new Set(key.split(/\s+/)), value])
+    Object.entries(roleMap).map(([roleName, keywords]) => [new Set(keywords), roleName])
   );
 
-  const matchedEntry = Array.from(roleMapSet.entries()).find(
-    ([roleKeywords]) => hasMatchingKeywords(roleKeywords, messageWords)
-  );
+  const matchedEntry = Array.from(roleMapSet.entries()).find(([keywords]) => {
+    return hasMatchingKeywords(keywords, new Set([messageContent]));
+  });
+
   if (!matchedEntry) {
+    console.log('No matching role found!');
     return null;
   }
 
   const [_, roleName] = matchedEntry;
   const role = findRole(message, roleName);
+
   if (!role) {
-    return null
-  };
+    console.log(`Role ${roleName} not found!`);
+    return null;
+  }
 
   assignRole(message, role);
   return roleName;
