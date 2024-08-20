@@ -22,3 +22,8 @@ export const ALUMNI_MAP: Record<string, string[]> = {
   "Figma 星際航道師": ['Figma', 'figma'],
   "Notion 宇宙聯絡員": ['Notion', 'notion'],
 }
+
+export const REMOVED_MAP: Record<string, string[]> = {
+  "NEWBIE": ['太空新兵 Lv.1', '太空新兵 Lv.2'],
+  "JUNIOR": ['太空新兵 Lv.3']
+}
