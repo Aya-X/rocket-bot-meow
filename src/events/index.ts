@@ -17,6 +17,12 @@ import {
 } from '../utils/roleUtils';
 import { sendWelcomeMessage } from '../utils/messageUtils';
 
+/**
+ * #NOTES:
+ * NEW: 新人加入
+ * CHEERS: 學員畢業
+ * BONUS: 彩蛋組別
+ */
 export const MSG_TYPES = ['NEW', 'CHEERS', 'BONUS'] as const;
 export type MessageType = (typeof MSG_TYPES)[number];
 

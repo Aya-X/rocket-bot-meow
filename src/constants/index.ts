@@ -1,5 +1,10 @@
 export const CURRENT_BATCH = 17;
 
+/**
+ * #NOTES: This is a map of batch names to their keywords.
+ * 'batchName': ['keyword1', 'keyword2', ...]
+ */
+
 export const GROUP_MAP: Record<string, string[]> = {
   '【前端組】': ['frontend', 'fe', '前端'],
   '【後端組】': ['backend', 'be', '後端'],
