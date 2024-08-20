@@ -1,22 +1,40 @@
 import { Message } from 'discord.js';
 
-import { CURRENT_BATCH, GROUP_MAP, FINISH_MAP, ALUMNI_MAP, REMOVED_MAP } from '../constants';
+import {
+  CURRENT_BATCH,
+  GROUP_MAP,
+  FINISH_MAP,
+  ALUMNI_MAP,
+  REMOVED_MAP,
+} from '../constants';
 
-import { assignRoleToSameBatchMembers, findAndAssignRole, findRoleNameFromMap, removeOneMemberRoles, removeBatchMembersRoles } from '../utils/roleUtils';
+import {
+  assignRoleToSameBatchMembers,
+  findAndAssignRole,
+  findRoleNameFromMap,
+  removeOneMemberRoles,
+  removeBatchMembersRoles,
+} from '../utils/roleUtils';
 import { sendWelcomeMessage } from '../utils/messageUtils';
 
 export const MSG_TYPES = ['NEW', 'CHEERS', 'BONUS'] as const;
-export type MessageType = typeof MSG_TYPES[number];
+export type MessageType = (typeof MSG_TYPES)[number];
 
 const BATCH_MAP: Record<string, string[]> = Object.fromEntries(
-  Array.from({ length: CURRENT_BATCH }, (_, i) => [`第 ${i + 1} 梯`, [`${i + 1}梯`, `第${i + 1}梯`]])
+  Array.from({ length: CURRENT_BATCH }, (_, i) => [
+    `第 ${i + 1} 梯`,
+    [`${i + 1}梯`, `第${i + 1}梯`],
+  ])
 );
 // end of BATCH_MAP
 
-const messageTypeHandlers: Record<string, (message: Message) => Promise<{
-  type: MessageType;
-  title: string;
-} | null>> = {
+const messageTypeHandlers: Record<
+  string,
+  (message: Message) => Promise<{
+    type: MessageType;
+    title: string;
+  } | null>
+> = {
   BONUS: async (message) => {
     const alumniName = findAndAssignRole(message, ALUMNI_MAP) ?? '';
 
@@ -28,8 +46,8 @@ const messageTypeHandlers: Record<string, (message: Message) => Promise<{
     const title = `${batchName} ${finishName}`;
 
     if (!batchName || !finishName) {
-      return null
-    };
+      return null;
+    }
 
     await removeBatchMembersRoles(message, batchName, REMOVED_MAP['JUNIOR']);
     await assignRoleToSameBatchMembers(message, batchName, finishName);
@@ -60,13 +78,20 @@ export async function handleMessage(message: Message) {
     return;
   }
 
-  const extractedRoleInfo = await Promise.all(MSG_TYPES.map(key => {
-    return messageTypeHandlers[key]?.(message);
-  }))
-    .then(infos => infos.find(info => info !== null)).catch(err => console.log('Error processing message types:', err));
+  const extractedRoleInfo = await Promise.all(
+    MSG_TYPES.map((key) => {
+      return messageTypeHandlers[key]?.(message);
+    })
+  )
+    .then((infos) => infos.find((info) => info !== null))
+    .catch((err) => console.log('Error processing message types:', err));
   // end of extractedRoleInfo
 
   if (extractedRoleInfo) {
-    await sendWelcomeMessage(extractedRoleInfo.type, message, extractedRoleInfo.title);
+    await sendWelcomeMessage(
+      extractedRoleInfo.type,
+      message,
+      extractedRoleInfo.title
+    );
   }
 }

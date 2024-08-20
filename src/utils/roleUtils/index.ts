@@ -1,7 +1,12 @@
 import { Message, Role, GuildMember } from 'discord.js';
 
-function hasMatchingKeywords(roleKeywords: string[], messageContent: string): boolean {
-  return Array.from(roleKeywords).some(keyword => messageContent.includes(keyword));
+function hasMatchingKeywords(
+  roleKeywords: string[],
+  messageContent: string
+): boolean {
+  return Array.from(roleKeywords).some((keyword) =>
+    messageContent.includes(keyword)
+  );
 }
 // end of hasMatchingKeywords
 
@@ -13,12 +18,15 @@ async function assignRole(message: Message, role: Role) {
 // end of assignRole
 
 export function assignRoleToMembers(members: GuildMember[], finishRole: Role) {
-  const assignPromises = members.map(async member => {
+  const assignPromises = members.map(async (member) => {
     console.log(`Assigning role ${finishRole.name} to user ${member.user.tag}`);
     try {
       return await member.roles.add(finishRole);
     } catch (err) {
-      return console.log(`Failed to assign role ${finishRole.name} to ${member.user.tag}:`, err);
+      return console.log(
+        `Failed to assign role ${finishRole.name} to ${member.user.tag}:`,
+        err
+      );
     }
   });
   // end of assignPromises
@@ -27,12 +35,16 @@ export function assignRoleToMembers(members: GuildMember[], finishRole: Role) {
 }
 // end of assignRoleToMembers
 
-export async function assignRoleToSameBatchMembers(message: Message, batchName: string, finishName: string) {
+export async function assignRoleToSameBatchMembers(
+  message: Message,
+  batchName: string,
+  finishName: string
+) {
   const role = findRole(message, batchName);
   if (!role) {
     console.log(`Role ${batchName} not found.`);
     return null;
-  };
+  }
 
   const finishRole = findRole(message, finishName);
   if (!finishRole) {
@@ -40,7 +52,9 @@ export async function assignRoleToSameBatchMembers(message: Message, batchName: 
     return null;
   }
 
-  const membersWithRole = message.guild?.members.cache.filter(member => member.roles.cache.has(role.id));
+  const membersWithRole = message.guild?.members.cache.filter((member) =>
+    member.roles.cache.has(role.id)
+  );
   if (!membersWithRole) {
     console.log(`No members found with role ${batchName}`);
     return null;
@@ -55,7 +69,10 @@ export function findRole(message: Message, roleName: string): Role | undefined {
 }
 // end of findRole
 
-export function findRoleNameFromMap(message: Message, roleMap: Record<string, string[]>): string | null {
+export function findRoleNameFromMap(
+  message: Message,
+  roleMap: Record<string, string[]>
+): string | null {
   const messageContent = message.content.toLowerCase().replace(/\s+/g, '');
 
   const matchedEntry = Object.entries(roleMap).find(([roleName, keywords]) => {
@@ -68,7 +85,7 @@ export function findRoleNameFromMap(message: Message, roleMap: Record<string, st
 
 export function findAndAssignRole(
   message: Message,
-  roleMap: Record<string, string[]>,
+  roleMap: Record<string, string[]>
 ): string | null {
   const roleName = findRoleNameFromMap(message, roleMap);
   if (!roleName) {
@@ -87,9 +104,12 @@ export function findAndAssignRole(
 }
 // end of findAndAssignRole
 
-export async function removeOneMemberRoles(member: GuildMember, rolesToRemove: string[]): Promise<void> {
-  const removalPromises = rolesToRemove.map(async roleName => {
-    const role = member.guild.roles.cache.find(r => r.name === roleName);
+export async function removeOneMemberRoles(
+  member: GuildMember,
+  rolesToRemove: string[]
+): Promise<void> {
+  const removalPromises = rolesToRemove.map(async (roleName) => {
+    const role = member.guild.roles.cache.find((r) => r.name === roleName);
     if (!role) {
       console.log(`Role ${roleName} not found`);
       return;
@@ -107,14 +127,23 @@ export async function removeOneMemberRoles(member: GuildMember, rolesToRemove: s
 }
 // end of removeOneMemberRoles
 
-export async function removeBatchMembersRoles(message: Message, batchName: string, rolesToRemove: string[]) {
+export async function removeBatchMembersRoles(
+  message: Message,
+  batchName: string,
+  rolesToRemove: string[]
+) {
   const batchRole = findRole(message, batchName);
-  const guildMembers = message.guild?.members.cache.filter(member => member.roles.cache.has(batchRole?.id!));
+  const guildMembers = message.guild?.members.cache.filter((member) =>
+    member.roles.cache.has(batchRole?.id!)
+  );
 
   if (guildMembers) {
-    console.log(`Found members with batchName ${batchName}:`, guildMembers.map(member => member.user.tag));
+    console.log(
+      `Found members with batchName ${batchName}:`,
+      guildMembers.map((member) => member.user.tag)
+    );
 
-    const removalPromises = guildMembers.map(async guildMember => {
+    const removalPromises = guildMembers.map(async (guildMember) => {
       await removeOneMemberRoles(guildMember, rolesToRemove);
     });
 
