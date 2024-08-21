@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
 
-import { MessageType } from '@/events';
+import { MessageType } from '@/features/role';
 
 const welcomeMessages: Record<
   string,
