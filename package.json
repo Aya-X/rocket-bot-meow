@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/index.js",
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "build": "tsc",
     "dev": "nodemon --watch src --exec pnpm run build && node dist/index.js",
     "format": "prettier --write ."
@@ -28,6 +28,8 @@
     "@types/node": "^22.3.0",
     "nodemon": "^3.1.4",
     "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.4"
   }
 }

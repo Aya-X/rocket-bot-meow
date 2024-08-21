@@ -6,7 +6,7 @@ import {
   FINISH_MAP,
   ALUMNI_MAP,
   REMOVED_MAP,
-} from '../constants';
+} from '@/constants';
 
 import {
   assignRoleToSameBatchMembers,
@@ -14,8 +14,8 @@ import {
   findRoleNameFromMap,
   removeOneMemberRoles,
   removeBatchMembersRoles,
-} from '../utils/roleUtils';
-import { sendWelcomeMessage } from '../utils/messageUtils';
+} from '@/utils/roleUtils';
+import { sendWelcomeMessage } from '@/utils/messageUtils';
 
 /**
  * #NOTES:
