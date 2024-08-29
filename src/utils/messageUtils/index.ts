@@ -25,3 +25,22 @@ export async function sendWelcomeMessage(
 
   await message.reply(replyMessage);
 }
+// end of sendWelcomeMessage
+
+export async function sendAnnouncementMessages(
+  message: Message,
+  title: string,
+  content: string,
+  link: string
+) {
+  const announcementChannel = message.guild?.channels.cache.get(
+    process.env.BROADCAST_CHANNEL_ID ?? ''
+  );
+
+  if (announcementChannel?.isTextBased()) {
+    await announcementChannel.send(
+      `論壇有新的文章出現囉::: **${title}**\n\n${content}\n[View Post](${link})`
+    );
+  }
+}
+// end of sendAnnouncementMessages

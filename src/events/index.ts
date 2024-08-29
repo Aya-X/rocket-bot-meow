@@ -1,6 +1,7 @@
-import { Message } from 'discord.js';
+import { Message, ThreadChannel } from 'discord.js';
 
 import { roleHandler } from '@/features/role';
+import { threadHandler } from '@/features/thread';
 
 export async function handleMessage(message: Message) {
   console.log(`Received message::: ${message.content}`);
@@ -12,4 +13,9 @@ export async function handleMessage(message: Message) {
   if (message.channel.id === process.env.ROLE_CHANNEL_ID) {
     await roleHandler(message);
   }
+
+  if (message.channel.isThread() && message.channel.parent?.id === process.env.FORUM_CHANNEL_ID) {
+    await threadHandler(message);
+  }
+
 }
