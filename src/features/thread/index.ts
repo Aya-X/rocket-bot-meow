@@ -5,8 +5,10 @@ import { sendAnnouncementMessages } from '@/utils/messageUtils';
 export async function threadHandler(message: Message) {
   const thread = message.channel as ThreadChannel;
 
-  if (thread.createdTimestamp !== message.createdTimestamp) {
+  const isReplyInExistingThread = thread.createdTimestamp !== message.createdTimestamp;
+  if (isReplyInExistingThread) {
     console.log('Message is a reply in an existing forum thread');
+    return;
   }
   console.log('New forum post created!');
 

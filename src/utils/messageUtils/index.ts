@@ -19,7 +19,7 @@ export async function sendWelcomeMessage(
   message: Message,
   title: string
 ) {
-  const username = message.author.globalName || message.author.username;
+  const username = message.author.globalName ?? message.author.username;
 
   const replyMessage = welcomeMessages[type](title, username);
 
