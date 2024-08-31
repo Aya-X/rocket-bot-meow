@@ -11,6 +11,8 @@ module.exports = {
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
     coverageDirectory: 'coverage',
     collectCoverage: true,
+    // #NOTES: for SonarQube
+    coverageReporters: ['lcov', 'text'],
     reporters: [
         'default',
         ["jest-html-reporters", {
