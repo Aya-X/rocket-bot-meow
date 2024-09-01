@@ -37,10 +37,13 @@ export async function sendAnnouncementMessages(
     process.env.BROADCAST_CHANNEL_ID ?? ''
   );
 
-  if (announcementChannel?.isTextBased()) {
-    await announcementChannel.send(
-      `論壇有新的文章出現囉::: **${title}**\n\n${content}\n[View Post](${link})`
-    );
+  if (!announcementChannel?.isTextBased()) {
+    console.log('Announcement channel not found or not text-based');
+    return;
   }
+
+  await announcementChannel.send(
+    `論壇有新的文章出現囉::: **${title}**\n\n${content}\n[View Post](${link})`
+  );
 }
 // end of sendAnnouncementMessages
